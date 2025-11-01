@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yasar Arafath - IT Support Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --skyblue: #87CEEB;
+            --deep-blue: #1E90FF;
+            --light-sky: #E0F7FF;
+            --white: #FFFFFF;
+            --dark: #2F4F4F;
+            --accent: #FF6B6B;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--skyblue) 0%, var(--deep-blue) 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Floating Background Elements */
+        .floating-circle {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .circle-1 { width: 200px; height: 200px; top: 10%; left: 5%; }
+        .circle-2 { width: 150px; height: 150px; bottom: 20%; right: 10%; }
+        .circle-3 { width: 100px; height: 100px; top: 50%; left: 80%; }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .name {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: var(--deep-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--light-sky);
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        /* Pop-up Sections */
+        .section-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .popup-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .popup-section.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .section-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--deep-blue);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--deep-blue);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--skyblue);
+            border-radius: 2px;
+        }
+
+        /* Summary Section */
+        .summary-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #555;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .skill-category {
+            background: var(--light-sky);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--deep-blue);
+        }
+
+        .skill-category h3 {
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .skill-list li::before {
+            content: '▸';
+            color: var(--deep-blue);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Experience Section */
+        .experience-item {
+            background: var(--light-sky);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--deep-blue);
+        }
+
+        .company {
+            font-size: 1.3rem;
+            color: var(--deep-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .position {
+            color: var(--dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .duration {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .achievements {
+            list-style: none;
+        }
+
+        .achievements li {
+            padding: 0.3rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .achievements li::before {
+            content: '✓';
+            color: var(--deep-blue);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Education Section */
+        .education-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--light-sky);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .education-item h3 {
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+        }
+
+        /* Availability Section */
+        .availability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .availability-item {
+            background: var(--light-sky);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .availability-item:hover {
+            border-color: var(--deep-blue);
+            transform: translateY(-5px);
+        }
+
+        .availability-item.highlight {
+            background: var(--deep-blue);
+            color: white;
+        }
+
+        .availability-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Language Section */
+        .languages {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .language-item {
+            background: var(--light-sky);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin-top: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .name {
+                font-size: 2.5rem;
+            }
+            
+            .job-title {
+                font-size: 1.4rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .popup-section {
+                padding: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating-circle {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-2 { animation-delay: 2s; }
+        .circle-3 { animation-delay: 4s; }
+    </style>
+</head>
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+    <div class="floating-circle circle-3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="name">YASAR ARAFATH S</h1>
+            <div class="job-title">IT Support Engineer / System Administrator</div>
+            <div class="contact-grid">
+                <div class="contact-item">📱 +919790365528</div>
+                <div class="contact-item">📧 yasararafathameed@gmail.com</div>
+                <div class="contact-item">📍 Dubai, UAE</div>
+                <div class="contact-item">🔗 LinkedIn: yasar-arafath-yass</div>
+            </div>
+        </header>
+
+        <!-- Pop-up Sections Container -->
+        <div class="section-container">
+            <!-- Summary Section -->
+            <section class="popup-section" id="summary">
+                <div class="section-icon">👨‍💻</div>
+                <h2 class="section-title">Professional Summary</h2>
+                <div class="summary-text">
+                    Dedicated IT Support Engineer with over 7 years of experience in system administration, 
+                    network troubleshooting, and IT infrastructure management. Skilled in deploying and 
+                    maintaining Windows Server environments, implementing security measures, and supporting 
+                    users across enterprise setups. Adept at improving uptime, optimizing performance, and 
+                    ensuring data security. Seeking to contribute technical expertise in UAE-based organizations.
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section class="popup-section" id="skills">
+                <div class="section-icon">🔧</div>
+                <h2 class="section-title">Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>Operating Systems & Servers</h3>
+                        <ul class="skill-list">
+                            <li>Windows Server Administration</li>
+                            <li>Active Directory (AD DS, DNS, DHCP)</li>
+                            <li>Group Policy Management</li>
+                            <li>Windows 10/11 Client Support</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Networking & Security</h3>
+                        <ul class="skill-list">
+                            <li>LAN/WAN Configuration</li>
+                            <li>TCP/IP, VPN, Firewall</li>
+                            <li>Network Security & ACLs</li>
+                            <li>Content Filtering</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Cloud & Tools</h3>
+                        <ul class="skill-list">
+                            <li>Microsoft 365 & Exchange</li>
+                            <li>Office 365 Admin Center</li>
+                            <li>ServiceNow, ManageEngine</li>
+                            <li>Azure Basics</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Infrastructure</h3>
+                        <ul class="skill-list">
+                            <li>NAS & Data Backup</li>
+                            <li>IT Asset Management</li>
+                            <li>Hardware/Software Support</li>
+                            <li>Remote Desktop Support</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section class="popup-section" id="experience">
+                <div class="section-icon">💼</div>
+                <h2 class="section-title">Professional Experience</h2>
+                
+                <div class="experience-item">
+                    <div class="company">Qatar Pharma, Doha, Qatar</div>
+                    <div class="position">IT Engineer</div>
+                    <div class="duration">Jan 2022 - Jun 2025</div>
+                    <ul class="achievements">
+                        <li>Managed Windows Server infrastructure for 150+ users</li>
+                        <li>Configured and administered NAS systems</li>
+                        <li>Implemented data backup and disaster recovery plans</li>
+                        <li>Monitored firewall policies and access control</li>
+                        <li>Provided L1/L2 support for Odoo and SAP systems</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="company">Vserv Info Systems, Chennai</div>
+                    <div class="position">IT Support Executive</div>
+                    <div class="duration">Mar 2021 - Dec 2021</div>
+                    <ul class="achievements">
+                        <li>Provided Windows server monitoring and support</li>
+                        <li>Delivered L1/L2 technical support via remote tools</li>
+                        <li>Coordinated with vendors for hardware procurement</li>
+                        <li>Executed preventive maintenance tasks</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="company">Magna InfoTech, Chennai</div>
+                    <div class="position">Desktop Support Engineer</div>
+                    <div class="duration">Mar 2018 - Sep 2019</div>
+                    <ul class="achievements">
+                        <li>End-user support for desktops and laptops</li>
+                        <li>OS and software installation/maintenance</li>
+                        <li>Improved resolution time by 20%</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Education & Availability Section -->
+            <section class="popup-section" id="education-availability">
+                <div class="section-icon">🎓</div>
+                <h2 class="section-title">Education & Availability</h2>
+                
+                <div class="education-item">
+                    <h3>B.Sc. Computer Science</h3>
+                    <p>Jamal Mohamed College, Tiruchirappalli</p>
+                    <p><strong>2015</strong></p>
+                </div>
+
+                <div class="languages">
+                    <div class="language-item">English</div>
+                    <div class="language-item">Tamil</div>
+                    <div class="language-item">Arabic (Basic)</div>
+                </div>
+
+                <h3 style="margin: 2rem 0 1rem 0; text-align: center; color: var(--deep-blue);">Availability Status</h3>
+                <div class="availability-grid">
+                    <div class="availability-item highlight">
+                        <div class="availability-icon">📍</div>
+                        <div>Dubai, UAE</div>
+                    </div>
+                    <div class="availability-item">
+                        <div class="availability-icon">📋</div>
+                        <div>Visit Visa</div>
+                    </div>
+                    <div class="availability-item highlight">
+                        <div class="availability-icon">⏰</div>
+                        <div>Immediate</div>
+                    </div>
+                    <div class="availability-item">
+                        <div class="availability-icon">📅</div>
+                        <div>Passport: Jun 2027</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Yasar Arafath S - IT Support Engineer | Ready to Join Immediately</p>
+            <p style="margin-top: 0.5rem;">📧 yasararafathameed@gmail.com | 📱 +919790365528</p>
+        </footer>
+    </div>
+
+    <script>
+        // Pop-up animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all pop-up sections
+        document.querySelectorAll('.popup-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add hover effects to experience items
+        document.querySelectorAll('.experience-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.1)';
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
